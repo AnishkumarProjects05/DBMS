@@ -20,16 +20,19 @@ const createOrder = async (req, res) => {
 const placeOrder = async (req, res) => {
   try {
     console.log("Place Order Request Body:", req.body); // 🔐 Log the request body for debugging
-    const { items, totalAmount } = req.body;
-    const userId = req.body.userId;
+    const { items, totalAmount, userId } = req.body;
+    console.log("Items:", items); // 🔐 Log the items for debugging
+    console.log("Total Amount:", totalAmount); // 🔐 Log the total amount for debugging
     console.log("User ID:", userId); // 🔐 Log the user ID for debugging
+    // const userId = req.body.userId;
+    // console.log("User ID:", userId); // 🔐 Log the user ID for debugging
 
     const newOrder = new Order({
       items,
       totalAmount,
       user: userId, // 🔐 Save the logged-in user ID
     });
-    console.log("New Order:", newOrder);  
+    // console.log("New Order:", newOrder);
     await newOrder.save();
 
     res.status(201).json({ message: "Order placed", order: newOrder });
@@ -41,6 +44,7 @@ const placeOrder = async (req, res) => {
 
 const getOrders = async (req, res) => {
   try {
+    console.log("Get Orders Request User ID:", req.user.id); // 🔐 Log the user ID for debugging
     const userId = req.user.id; // Comes from auth middleware
     const orders = await Order.find({ user: userId });
     res.status(200).json({ message: "Orders fetched", orders });
