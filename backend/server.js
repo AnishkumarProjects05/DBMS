@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const paymentRoutes = require('../backend/routes/paymentRoutes');
+const bodyParser = require('body-parser');
 
 
 
@@ -13,33 +14,34 @@ require('dotenv').config();
 // Initialize Express App
 const app = express();
 
-// Connect to MongoDB
+// Connect to DB
 connectDB();
 
 // Middlewares
-app.use(cors());
+// app.use(cors());
 app.use(express.json()); // Body parser for JSON
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 // Import Routes
 const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 
-// Route Handlers
-app.use('/api/auth', authRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/orders', orderRoutes);
+// ✅ Body Parser
+app.use(bodyParser.json());
 
 // Basic Route for Testing
 app.get('/', (req, res) => {
   res.send('✅ Grocery Platform API is up and running!');
 });
 
-//Payment Routes
 app.use("/api/payments",paymentRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
+
 
 // Server Port
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4001;
 
 // Start Server
 app.listen(PORT, () => {
